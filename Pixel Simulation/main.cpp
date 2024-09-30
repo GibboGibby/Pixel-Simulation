@@ -1,12 +1,9 @@
 #include <iostream>
-#include <raylib/raylib.h>
+#include "Application.h"
 
 int main()
 {
-	InitWindow(1920, 1080, "Gaming Window");
-
-	while (!WindowShouldClose())
-	{
-
-	}
+	Application app;
+	app.Init();
+	app.Run();
 }
