@@ -134,11 +134,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Pixel.h" />
+    <ClInclude Include="PixelSerialization.h" />
+    <ClInclude Include="raygui.h" />
+    <ClInclude Include="Settings.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="style_bluish.h" />
+    <ClInclude Include="style_candy.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
