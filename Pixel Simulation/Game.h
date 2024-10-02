@@ -7,10 +7,12 @@ public:
 	Game();
 	~Game();
 
+	void Init();
+	void Cleanup();
+
 	void Update();
 	void Render();
 
-	void Cleanup();
 
 	void Pause(bool shouldPuase);
 

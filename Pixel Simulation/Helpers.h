@@ -1,5 +1,7 @@
 #pragma once
 #include "raylib.h"
+#include <random>
+#include <functional>
 
 //
 inline Rectangle GetRelativeRectPercent(Vector2 origin, Vector2 size)
@@ -30,4 +32,19 @@ inline Rectangle GetRelativeRectBased(Vector2 origin, Vector2 size, Vector2 base
 	rect.width = size.x * xScale;
 	rect.height = size.y * yScale;
 	return rect;
+}
+
+inline float GetCenteredX(int size)
+{
+	return (float)(GetScreenWidth() / 2) - (size / 2);
+}
+
+inline float GetCenteredY(int size)
+{
+	return (float)(GetScreenHeight() / 2) - (size / 2);
+}
+
+inline bool randomBool() {
+	static auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
+	return gen();
 }

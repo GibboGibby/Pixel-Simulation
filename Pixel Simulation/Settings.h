@@ -1,11 +1,26 @@
 #pragma once
+#include "raylib.h"
+#include <string>
 
 
-
-struct Settings
+struct GameSettings
 {
 	bool drawFPS = false;
-	bool random = true;
+	bool pauseGameInMenu = false;
 };
 
-extern Settings g_Settings;
+extern GameSettings g_GameSettings;
+
+static inline void SaveGameSettings()
+{
+	SaveFileData("GameSettings.gib", &g_GameSettings, sizeof(GameSettings));
+}
+
+static inline void LoadGameSettings()
+{
+	if (!FileExists("GameSettings.gib")) return;
+	int size = 0;
+	unsigned char* data = LoadFileData("GameSettings.gib", &size);
+
+	memcpy(&g_GameSettings, data, size);
+}

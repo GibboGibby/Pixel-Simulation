@@ -39,4 +39,6 @@ private:
 	GameState gameState = MAIN_MENU;
 	Game game;
 	GameState previousState = MAIN_MENU;
+
+	Font mainMenuButtonFont;
 };

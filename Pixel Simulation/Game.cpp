@@ -4,12 +4,17 @@
 
 Game::Game()
 {
-	simulation = new Simulation();
+	
 }
 
 Game::~Game()
 {
 	//delete simulation;
+}
+
+void Game::Init()
+{
+	simulation = new Simulation();
 }
 
 void Game::Update()
@@ -19,19 +24,26 @@ void Game::Update()
 		std::cout << "A Pressed" << std::endl;
 	}
 
+
+	// Simulation Section
+	if (simulation == nullptr) return;
 	if (IsKeyPressed(KEY_SPACE))
 	{
 		simulation->TogglePause();
 	}
+
+	simulation->Update();
 }
 
 void Game::Render()
 {
+	simulation->Render();
 }
 
 void Game::Cleanup()
 {
 	delete simulation;
+	simulation = nullptr;
 }
 
 void Game::Pause(bool shouldPuase)

@@ -1,6 +1,6 @@
 #include "Settings.h"
 
-Settings g_Settings = {
+GameSettings g_GameSettings = {
 	true,
 	false
 };
