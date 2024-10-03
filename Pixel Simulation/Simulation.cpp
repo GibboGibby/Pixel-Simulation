@@ -148,8 +148,11 @@ void Simulation::SimulationStep()
 void Simulation::PixelStep(int x, int y)
 {
 	Pixel* pixel = &simulation[x][y];
+	PixelData data = PixelDataTable.at(pixel->type);
 	if (pixel->hasUpdated) return;
-	if (y > 300) return;
+	if ((y + 1) >= SCREEN_HEIGHT) return;
+	pixel->vel -= data.accel * GetFrameTime();
+	int actualVel = ceil(pixel->vel);
 	if (pixel->type == SAND)
 	{
 		if (simulation[x][y + 1].type == AIR)

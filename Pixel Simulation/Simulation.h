@@ -33,7 +33,7 @@ public:
 
 	void SwapPixels(Pixel* a, Pixel* b);
 
-
+	Pixel* GetNextDownPixel(int x, int y, int dist);	`
 
 private:
 

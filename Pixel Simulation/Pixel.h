@@ -129,7 +129,11 @@ struct PixelData
 const std::map<PixelType, PixelData> PixelDataTable
 {
 	// COPY PIXEL DATA FROM RANDY AS I AM LAZY LMAO
-	// Type,
-	{UNDEFINED, {"Undefined"}},
-	{VOID, {"Void"}}
+	// Type,	    Name,		 
+	{UNDEFINED, {"Undefined",	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
+	{VOID,		{"Void",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
+	{AIR,		{"Air",			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
+	{WATER,		{"Water",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0.4f, 10.f, 0, 0.f, UNDEFINED, UNDEFINED}},
+	{SAND,		{"Sand",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0.4f, 10.f, 0, 0.2f, UNDEFINED, UNDEFINED}},
+	{WOOD,		{"Wood",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}}
 };
