@@ -137,11 +137,18 @@ void Simulation::SimulationStep()
 	int ySize = simulation[0].size();
 	for (int x = 0; x < xSize; x++)
 	{
-		//for (int y= ySize - 1; y > 0; y--)
+#ifdef LOOP_FROM_BOTTOM
+		for (int y= ySize - 1; y > 0; y--)
+		//for (int y = 0; y < ySize; y++)
+		{
+			PixelStep(x, y);
+		}
+#else
 		for (int y = 0; y < ySize; y++)
 		{
 			PixelStep(x, y);
 		}
+#endif
 	}
 }
 
@@ -151,8 +158,21 @@ void Simulation::PixelStep(int x, int y)
 	PixelData data = PixelDataTable.at(pixel->type);
 	if (pixel->hasUpdated) return;
 	if ((y + 1) >= SCREEN_HEIGHT) return;
-	pixel->vel -= data.accel * GetFrameTime();
-	int actualVel = ceil(pixel->vel);
+	pixel->vel.y -= data.accel * GetFrameTime();
+	pixel->hasUpdated = true;
+	int actualVel = floor(pixel->vel.y);
+	
+
+	if (CheckFlag(pixel, FALL))
+	{
+		int absVal = abs(actualVel);
+		//std::cout << "Pixel is falling with vel of " << absVal << std::endl;
+		Pixel* nextPixel = GetNextDownPixel(x, y, absVal);
+		SwapPixels(pixel, nextPixel);
+	}
+
+
+	/*
 	if (pixel->type == SAND)
 	{
 		if (simulation[x][y + 1].type == AIR)
@@ -161,6 +181,8 @@ void Simulation::PixelStep(int x, int y)
 			SwapPixels(&simulation[x][y + 1], pixel);
 		}
 	}
+	*/
+	
 
 
 }
@@ -170,4 +192,28 @@ void Simulation::SwapPixels(Pixel* a, Pixel* b)
 	Pixel temp = *a;
 	*a = *b;
 	*b = temp;
+}
+
+Pixel* Simulation::GetNextDownPixel(int x, int y, int dist)
+{
+	Pixel* lastGoodPixel = &simulation[x][y];
+	//std::cout << "dist value - " << dist << std::endl;
+	for (int i = 1; i <= dist; i++)
+	{
+		int newY = y + i;
+		if (newY > SCREEN_HEIGHT) break;
+		Pixel* temp = &simulation[x][newY];
+		//std::cout << i << "th value" << std::endl;
+		if (temp->type == AIR)
+		{
+			lastGoodPixel = &simulation[x][newY];
+			//std::cout << "Last good air is at x: " << x << " y: " << y << std::endl;
+		}
+		else
+		{
+			simulation[x][y].hasCollided = true;
+			break;
+		}
+	}
+	return lastGoodPixel;
 }

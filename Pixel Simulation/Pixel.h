@@ -1,5 +1,6 @@
 #pragma once
 #define Clamp(a, x, b) (((a)>(x))?(a):((b)<(x))?(b):(x))
+
 #include "raylib.h"
 #include <cstdlib>
 #include <map>
@@ -20,14 +21,12 @@ enum PixelType : char
 
 enum PixelFlags
 {
-
+	MOVE_X,
+	MOVE_Y,
+	MOVE_DIAG,
+	FALL,
+	RISE
 };
-
-inline bool CheckFlag(int flags)
-{
-	return false;
-}
-
  
 const bool SAND_WITH_TINTING = false;
 
@@ -41,9 +40,10 @@ struct alignas(64) Pixel
 	PixelType type;
 	unsigned char variant;
 	bool hasUpdated = false;
-	float vel;
+	Vector2 vel = {0.0f,0.0f};
 	bool isResting;
-	//int lifeRemaining;
+	bool hasCollided;
+	int lifeRemaining;
 
 
 
@@ -129,7 +129,7 @@ struct PixelData
 const std::map<PixelType, PixelData> PixelDataTable
 {
 	// COPY PIXEL DATA FROM RANDY AS I AM LAZY LMAO
-	// Type,	    Name,		 
+	// Type,	    Name,		MoveX	MoveY	MoveDiag	Fall	Rise	Y2X		Spread	LimLife	 
 	{UNDEFINED, {"Undefined",	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{VOID,		{"Void",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{AIR,		{"Air",			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
@@ -137,3 +137,28 @@ const std::map<PixelType, PixelData> PixelDataTable
 	{SAND,		{"Sand",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0.4f, 10.f, 0, 0.2f, UNDEFINED, UNDEFINED}},
 	{WOOD,		{"Wood",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}}
 };
+
+inline bool CheckFlag(Pixel* pixel, PixelFlags flag)
+{
+	const PixelData* data = &PixelDataTable.at(pixel->type);
+	switch (flag)
+	{
+	case MOVE_X:
+		return data->move_x;
+		break;
+	case MOVE_Y:
+		return data->move_y;
+		break;
+	case MOVE_DIAG:
+		return data->move_diag;
+		break;
+	case FALL:
+		return data->fall;
+	case RISE:
+		return data->rise;
+	default:
+		return false;
+		break;
+	}
+	return false;
+}

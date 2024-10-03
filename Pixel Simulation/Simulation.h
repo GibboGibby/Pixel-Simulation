@@ -4,8 +4,10 @@
 #include <array>
 #include "Maths.h"
 
-const int SCREEN_WIDTH = 192 * 3;
-const int SCREEN_HEIGHT = 108 * 3;
+//#define LOOP_FROM_BOTTOM
+
+const int SCREEN_WIDTH = 192 * 2;
+const int SCREEN_HEIGHT = 108 * 2;
 
 class Simulation
 {
@@ -33,7 +35,7 @@ public:
 
 	void SwapPixels(Pixel* a, Pixel* b);
 
-	Pixel* GetNextDownPixel(int x, int y, int dist);	`
+	Pixel* GetNextDownPixel(int x, int y, int dist);
 
 private:
 
