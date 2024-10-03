@@ -154,6 +154,7 @@
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="style_bluish.h" />
     <ClInclude Include="style_candy.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,8 +1,10 @@
 #pragma once
+#define Clamp(a, x, b) (((a)>(x))?(a):((b)<(x))?(b):(x))
 #include "raylib.h"
 #include <cstdlib>
 #include <map>
 #include <iostream>
+#include "Maths.h"
 
 enum PixelType : char
 {
@@ -27,8 +29,9 @@ inline bool CheckFlag(int flags)
 }
 
  
+const bool SAND_WITH_TINTING = false;
 
-struct Pixel 
+struct alignas(64) Pixel 
 {
 	Pixel() = default;
 	Pixel(PixelType _type) {
@@ -38,29 +41,61 @@ struct Pixel
 	PixelType type;
 	unsigned char variant;
 	bool hasUpdated = false;
+	float vel;
+	bool isResting;
+	//int lifeRemaining;
 
 
+
+	
 	Color GetColor()
 	{
+		Color baseCol;
+		uint32_t noise = -10 + variant % 20;
 		switch (type)
 		{
 		case AIR:
 			return { 0,0,0,0 };
 			break;
 		case WOOD:
-			return { 150,75,0,255 };
+			baseCol = { 161,106,82,255 };
+			noise /= 2;
 			break;
 		case SAND:
-			return { 255, 255, 0, 255 };
+			//baseCol = { 242,216,145,255 };
+			//baseCol = { 242,216,192,255 };
+			baseCol = { 242, 228, 168, 255 };
 			break;
 		case WATER:
-			return { 0,0,255,255 };
+			baseCol = { 74, 147, 244, 170 };
 			break;
 		default:
 			return { 0,0,0,0 };
 			break;
 		}
+		// Tinting
+		if (SAND_WITH_TINTING)
+		{
+			Vec3U8 temp_col = RgbToHsv({ baseCol.r, baseCol.g, baseCol.b });
+			temp_col.y /= 2;
+			temp_col = HsvToRgb(temp_col);
+			baseCol.r = temp_col.r;
+			baseCol.g = temp_col.g;
+			baseCol.b = temp_col.b;
+		}
+		
+		
+
+		// Adding noise
+		baseCol.r += noise;
+		baseCol.g += noise;
+		baseCol.b += noise;
+		baseCol.r = Clamp(0, baseCol.r, 255);
+		baseCol.g = Clamp(0, baseCol.g, 255);
+		baseCol.b = Clamp(0, baseCol.b, 255);
+		return baseCol;
 	}
+	
 
 	void SetRandomVariant()
 	{

@@ -110,12 +110,15 @@ void Simulation::Render()
 
 void Simulation::RenderSimulation()
 {
-	for (int x = 0; x < SCREEN_WIDTH; x++)
+	int xSize = simulation.size();
+	int ySize = simulation[0].size();
+	for (int x = 0; x < xSize; x++)
 	{
-		for (int y = 0; y < SCREEN_HEIGHT; y++)
+		for (int y = 0; y < ySize; y++)
 		{
-			colourBuffer[y][x] = simulation[x][y].GetColor();
-			simulation[x][y].hasUpdated = false;
+			Pixel* pixel = &simulation[x][y];
+			colourBuffer[y][x] = pixel->GetColor();
+			pixel->hasUpdated = false;
 		}
 	}
 
