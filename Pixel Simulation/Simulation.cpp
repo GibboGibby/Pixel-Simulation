@@ -174,6 +174,7 @@ void Simulation::PixelStep(int x, int y)
 			pixel = nextPixel;
 		}
 	}
+	// TODO: Need to add x-to-y splat so that it is less uniform
 	if (CheckFlag(pixel, MOVE_DIAG) && pixel->hasCollided)
 	{
 		int rightX = x +1;
@@ -188,7 +189,7 @@ void Simulation::PixelStep(int x, int y)
 				SwapPixels(pixel, other);
 				pixel = other;
 			}
-
+			
 			if (CheckRightDiagonal(x, y))
 			{
 				Pixel* other = &simulation[rightX][newY];
