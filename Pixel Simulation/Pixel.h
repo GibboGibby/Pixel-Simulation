@@ -36,12 +36,13 @@ struct alignas(64) Pixel
 	Pixel(PixelType _type) {
 		type = _type;
 		variant = (unsigned char)(rand() % 256);
+		if (type == WOOD) isResting = true;
 	}
 	PixelType type;
 	unsigned char variant;
 	bool hasUpdated = false;
 	Vector2 vel = {0.0f,0.0f};
-	bool isResting;
+	bool isResting = false;
 	bool hasCollided;
 	int lifeRemaining;
 
