@@ -37,6 +37,9 @@ public:
 
 	Pixel* GetNextDownPixel(int x, int y, int dist);
 
+	bool CheckLeftDiagonal(int x, int y);
+	bool CheckRightDiagonal(int x, int y);
+
 private:
 
 	// WILL BE REPLACED WITH CHUNKS LATER

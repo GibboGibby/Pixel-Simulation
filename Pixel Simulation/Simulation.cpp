@@ -113,6 +113,7 @@ void Simulation::RenderSimulation()
 			Pixel* pixel = &simulation[x][y];
 			colourBuffer[y][x] = pixel->GetColor();
 			pixel->hasUpdated = false;
+			pixel->hasCollided = false;
 		}
 	}
 
@@ -170,10 +171,35 @@ void Simulation::PixelStep(int x, int y)
 			//std::cout << "Pixel is falling with vel of " << absVal << std::endl;
 			Pixel* nextPixel = GetNextDownPixel(x, y, actualVel);
 			SwapPixels(pixel, nextPixel);
+			pixel = nextPixel;
+		}
+	}
+	if (CheckFlag(pixel, MOVE_DIAG) && pixel->hasCollided)
+	{
+		int rightX = x +1;
+		int leftX = x-1;
+		int newY = y+1;
+		if (newY >= SCREEN_WIDTH) return;
+		if (!simulation[x][y+1].type == AIR)
+		{
+			if (CheckLeftDiagonal(x, y))
+			{
+				Pixel* other = &simulation[leftX][newY];
+				SwapPixels(pixel, other);
+				pixel = other;
+			}
+
+			if (CheckRightDiagonal(x, y))
+			{
+				Pixel* other = &simulation[rightX][newY];
+				SwapPixels(pixel, other);
+				pixel = other;
+			}
 		}
 	}
 
-
+	if (pixel->hasCollided) pixel->vel.y = 0.0f;
+	
 	/*
 	if (pixel->type == SAND)
 	{
@@ -203,7 +229,7 @@ Pixel* Simulation::GetNextDownPixel(int x, int y, int dist)
 	for (int i = 1; i <= dist; i++)
 	{
 		int newY = y + i;
-		if (newY > SCREEN_HEIGHT) break;
+		if (newY > SCREEN_HEIGHT-1) break;
 		Pixel* temp = &simulation[x][newY];
 		//std::cout << i << "th value" << std::endl;
 		if (temp->type == AIR)
@@ -219,4 +245,28 @@ Pixel* Simulation::GetNextDownPixel(int x, int y, int dist)
 		}
 	}
 	return lastGoodPixel;
+}
+
+bool Simulation::CheckLeftDiagonal(int x, int y)
+{
+	int newX = x - 1;
+	int newY = y + 1;
+
+	if (newX < 0) return false;
+	if (newY > SCREEN_HEIGHT - 1) return false;
+	if (simulation[newX][y].type != AIR) return false;
+	if (simulation[newX][newY].type == AIR) return true;
+	return false;
+}
+
+bool Simulation::CheckRightDiagonal(int x, int y)
+{
+	int newX = x + 1;
+	int newY = y + 1;
+
+	if (newX > SCREEN_WIDTH-1) return false;
+	if (newY > SCREEN_HEIGHT - 1) return false;
+	if (simulation[newX][y].type != AIR) return false;
+	if (simulation[newX][newY].type == AIR) return true;
+	return false;
 }
