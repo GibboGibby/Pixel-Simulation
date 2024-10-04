@@ -6,8 +6,8 @@
 
 //#define LOOP_FROM_BOTTOM
 
-const int SCREEN_WIDTH = 192 * 2;
-const int SCREEN_HEIGHT = 108 * 2;
+const int SCREEN_WIDTH = 192 * 3;
+const int SCREEN_HEIGHT = 108 * 3;
 
 class Simulation
 {

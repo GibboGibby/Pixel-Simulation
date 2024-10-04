@@ -47,13 +47,7 @@ void Simulation::Update()
 
 	if (IsKeyDown(KEY_P))
 	{
-		for (int i = 0; i < 75; i++)
-		{
-			for (int j = 0; j < 75; j++)
-			{
-				simulation[10 + i][10 + j] = SAND;
-			}
-		}
+		simulation[100][10] = { SAND };
 	}
 
 	SimulationStep();
@@ -158,17 +152,25 @@ void Simulation::PixelStep(int x, int y)
 	PixelData data = PixelDataTable.at(pixel->type);
 	if (pixel->hasUpdated) return;
 	if ((y + 1) >= SCREEN_HEIGHT) return;
-	pixel->vel.y -= data.accel * GetFrameTime();
-	pixel->hasUpdated = true;
-	int actualVel = floor(pixel->vel.y);
-	
 
-	if (CheckFlag(pixel, FALL))
+	if (CheckFlag(pixel, MOVE_Y))
 	{
-		int absVal = abs(actualVel);
-		//std::cout << "Pixel is falling with vel of " << absVal << std::endl;
-		Pixel* nextPixel = GetNextDownPixel(x, y, absVal);
-		SwapPixels(pixel, nextPixel);
+		pixel->vel.y -= data.accel * GetFrameTime();
+		pixel->hasUpdated = true;
+
+		pixel->vel.y = Min(pixel->vel.y, data.max_speed);
+
+
+
+		if (CheckFlag(pixel, FALL))
+		{
+			float absVal = fabs(pixel->vel.y);
+			int actualVel = ceil(absVal);
+			//std::cout << "y vel - " << pixel->vel.y << " | abs y - " << absVal << " | and actual vel - " << actualVel << std::endl;
+			//std::cout << "Pixel is falling with vel of " << absVal << std::endl;
+			Pixel* nextPixel = GetNextDownPixel(x, y, actualVel);
+			SwapPixels(pixel, nextPixel);
+		}
 	}
 
 
@@ -207,6 +209,7 @@ Pixel* Simulation::GetNextDownPixel(int x, int y, int dist)
 		if (temp->type == AIR)
 		{
 			lastGoodPixel = &simulation[x][newY];
+			//simulation[x][y].vel.y += 1;
 			//std::cout << "Last good air is at x: " << x << " y: " << y << std::endl;
 		}
 		else

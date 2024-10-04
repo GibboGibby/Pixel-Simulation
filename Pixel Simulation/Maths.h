@@ -233,3 +233,13 @@ inline Vec3U8 RgbToHsv(Vec3U8 rgb)
 
 	return hsv;
 }
+
+inline float Max(float a, float b)
+{
+	//if (a > b) return b
+}
+
+inline float Min(float a, float b)
+{
+	return (a > b) ? b : a;
+}
