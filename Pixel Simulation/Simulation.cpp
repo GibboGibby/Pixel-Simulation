@@ -34,6 +34,24 @@ void Simulation::Update()
 	if (IsKeyPressed(KEY_THREE)) selectedPixel.type = SAND;
 
 
+	Vector2 mosueWheel = GetMouseWheelMoveV();
+	if (mosueWheel.y > 0)
+	{
+		if (IsKeyDown(KEY_LEFT_CONTROL))
+		{
+			selectedPixel.type = WheelscrollEnum(selectedPixel.type, 1);
+		}
+
+	}
+	if (mosueWheel.y < 0)
+	{
+		if (IsKeyDown(KEY_LEFT_CONTROL))
+		{
+			selectedPixel.type = WheelscrollEnum(selectedPixel.type, -1);
+		}
+	}
+
+
 	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
 	{
 		Vector2 temp = { mousePos.x / relativeScale, mousePos.y / relativeScale };
@@ -100,6 +118,8 @@ void Simulation::Render()
 	RenderSimulation();
 
 	placingCrosshair.Render();
+
+	DrawText((("Selected Pixel is: " + selectedPixel.GetName()).c_str()), 10, 60, 20, GREEN);
 }
 
 void Simulation::RenderSimulation()

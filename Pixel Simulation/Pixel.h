@@ -47,7 +47,27 @@ struct alignas(64) Pixel
 	int lifeRemaining;
 
 
-
+	std::string GetName()
+	{
+		switch (type)
+		{
+		case AIR:
+			return "Air";
+			break;
+		case WOOD:
+			return "Wood";
+			break;
+		case SAND:
+			return "Sand";
+			break;
+		case WATER:
+			return "Water";
+			break;
+		default:
+			return "Unknown";
+			break;
+		}
+	}
 	
 	Color GetColor()
 	{
@@ -134,7 +154,7 @@ const std::map<PixelType, PixelData> PixelDataTable
 	{UNDEFINED, {"Undefined",	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{VOID,		{"Void",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{AIR,		{"Air",			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
-	{WATER,		{"Water",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0.4f, 10.f, 0, 0.f, UNDEFINED, UNDEFINED}},
+	{WATER,		{"Water",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 8.2f, 10.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{SAND,		{"Sand",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 9.8f, 10.f, 0, 0.2f, UNDEFINED, UNDEFINED}},
 	{WOOD,		{"Wood",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}}
 };
@@ -162,4 +182,23 @@ inline bool CheckFlag(Pixel* pixel, PixelFlags flag)
 		break;
 	}
 	return false;
+}
+
+inline PixelType WheelscrollEnum(PixelType pixelType, int increment)
+{
+	int enumAsInt = static_cast<int>(pixelType) + increment;
+
+	int max = static_cast<int>(PIXEL_COUNT);
+	if (enumAsInt < 0)
+	{
+		return static_cast<PixelType>(static_cast<int>(PIXEL_COUNT) - 1);
+	}
+	else if (enumAsInt >= max)
+	{
+		return static_cast<PixelType>(0);
+	}
+	else
+	{
+		return static_cast<PixelType>(enumAsInt);
+	}
 }
