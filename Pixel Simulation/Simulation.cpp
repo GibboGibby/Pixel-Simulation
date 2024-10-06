@@ -199,6 +199,28 @@ void Simulation::PixelStep(int x, int y)
 	{
 		bool rightFirst = RandomBool();
 		int dir = (rightFirst) ? 1 : -1;
+
+		//Check First Dir
+		int firstY = y + dir;
+		int secondY = y - dir;
+		if (firstY < SCREEN_WIDTH && firstY > 0) 
+		{
+			if (simulation[x][firstY].type == AIR)
+			{
+				Pixel* other = &simulation[x][firstY];
+				SwapPixels(pixel, other);
+				pixel = other;
+			}
+		}
+		if (secondY < SCREEN_WIDTH && secondY > 0)
+		{
+			if (simulation[x][secondY].type == AIR)
+			{
+				Pixel* other = &simulation[x][secondY];
+				SwapPixels(pixel, other);
+				pixel = other;
+			}
+		}
 	}
 	// TODO: Need to add x-to-y splat so that it is less uniform
 	if (CheckFlag(pixel, MOVE_DIAG) && pixel->hasCollided)
