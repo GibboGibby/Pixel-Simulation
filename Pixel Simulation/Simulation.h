@@ -3,6 +3,7 @@
 #include "PlacingCrosshair.h"
 #include <array>
 #include "Maths.h"
+#include "Helpers.h"
 
 #define LOOP_FROM_BOTTOM
 

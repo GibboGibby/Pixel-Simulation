@@ -44,7 +44,7 @@ inline float GetCenteredY(int size)
 	return (float)(GetScreenHeight() / 2) - (size / 2);
 }
 
-inline bool randomBool() {
+inline bool RandomBool() {
 	static auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
 	return gen();
 }

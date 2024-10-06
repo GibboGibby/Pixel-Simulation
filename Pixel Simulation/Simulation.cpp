@@ -194,6 +194,12 @@ void Simulation::PixelStep(int x, int y)
 			pixel = nextPixel;
 		}
 	}
+
+	if (CheckFlag(pixel, MOVE_X) && pixel->hasCollided)
+	{
+		bool rightFirst = RandomBool();
+		int dir = (rightFirst) ? 1 : -1;
+	}
 	// TODO: Need to add x-to-y splat so that it is less uniform
 	if (CheckFlag(pixel, MOVE_DIAG) && pixel->hasCollided)
 	{

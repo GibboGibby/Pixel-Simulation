@@ -155,7 +155,7 @@ const std::map<PixelType, PixelData> PixelDataTable
 	{VOID,		{"Void",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{AIR,		{"Air",			 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}},
 	{WATER,		{"Water",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 8.2f, 10.f, 0, 0.f, UNDEFINED, UNDEFINED}},
-	{SAND,		{"Sand",		 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 9.8f, 10.f, 0, 0.2f, UNDEFINED, UNDEFINED}},
+	{SAND,		{"Sand",		 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 9.8f, 10.f, 0, 0.2f, UNDEFINED, UNDEFINED}},
 	{WOOD,		{"Wood",		 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.f, 0.f, 0, 0.f, UNDEFINED, UNDEFINED}}
 };
 
