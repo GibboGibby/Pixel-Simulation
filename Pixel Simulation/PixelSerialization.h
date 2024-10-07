@@ -5,4 +5,5 @@
 struct PixelSerialized
 {
 	PixelType type;
+	char variant;
 };
