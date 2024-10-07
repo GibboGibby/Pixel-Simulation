@@ -44,9 +44,10 @@ public:
 	bool CheckLeftDiagonal(int x, int y);
 	bool CheckRightDiagonal(int x, int y);
 
-	void SaveSimulation();
-	void LoadSimulation();
+	void SaveSimulation(std::string filePath);
+	void LoadSimulation(std::string filePath);
 
+	PlacingCrosshair placingCrosshair;
 private:
 
 	// WILL BE REPLACED WITH CHUNKS LATER
@@ -56,5 +57,5 @@ private:
 	bool paused = false;
 	float relativeScale = 1.0f;
 	Pixel selectedPixel = { WOOD }; 
-	PlacingCrosshair placingCrosshair;
+	
 };

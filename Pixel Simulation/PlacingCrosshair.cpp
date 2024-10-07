@@ -2,6 +2,7 @@
 
 void PlacingCrosshair::Update()
 {
+	if (disabled) return;
 	Vector2 mosueWheel = GetMouseWheelMoveV();
 	if (mosueWheel.y > 0)
 	{
@@ -20,7 +21,18 @@ void PlacingCrosshair::Update()
 
 void PlacingCrosshair::Render()
 {
+	if (disabled) return;
 	Vector2 mousePos = GetMousePosition();
 	Rectangle rect = { mousePos.x - size.x / 2, mousePos.y - size.y / 2, size.x, size.y };
 	DrawRectangleLinesEx(rect, 2.0f, RED);
+}
+
+void PlacingCrosshair::DisableCrosshair()
+{
+	disabled = true;
+}
+
+void PlacingCrosshair::EnableCrosshair()
+{
+	disabled = false;
 }

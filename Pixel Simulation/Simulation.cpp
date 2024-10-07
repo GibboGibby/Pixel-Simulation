@@ -35,14 +35,7 @@ void Simulation::Update()
 	if (IsKeyPressed(KEY_FOUR))  selectedPixel.type = WATER;
 
 
-	if (IsKeyPressed(KEY_F6))
-	{
-		SaveSimulation();
-	}
-	if (IsKeyPressed(KEY_F7))
-	{
-		LoadSimulation();
-	}
+	
 
 	Vector2 mosueWheel = GetMouseWheelMoveV();
 	if (mosueWheel.y > 0)
@@ -360,10 +353,9 @@ bool Simulation::CheckRightDiagonal(int x, int y)
 	return false;
 }
 
-void Simulation::SaveSimulation()
+void Simulation::SaveSimulation(std::string filePath)
 {
 	std::vector<std::vector<PixelSerialized>> serialized(SCREEN_WIDTH, std::vector<PixelSerialized>(SCREEN_HEIGHT));
-	
 	//std::unique_ptr<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>> serialized = std::make_unique<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>>();
 	for (int x = 0; x < simulation.size(); x++)
 	{
@@ -381,16 +373,16 @@ void Simulation::SaveSimulation()
 		flatArray.insert(flatArray.end(), row.begin(), row.end());
 	}
 
-	SaveFileData("save_data.gib", simulation.data(), sizeof(simulation));
+	SaveFileData(filePath.c_str(), simulation.data(), sizeof(simulation));
 }
 
-void Simulation::LoadSimulation()
+void Simulation::LoadSimulation(std::string filePath)
 {
 	//std::unique_ptr<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>> serialized = std::make_unique<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>>();
 	
 	//std::vector<std::vector<PixelSerialized>> serialized(SCREEN_WIDTH, std::vector<PixelSerialized>(SCREEN_HEIGHT));
 	int size = sizeof(simulation);
-	unsigned char* bytes = LoadFileData("save_data.gib", &size);
+	unsigned char* bytes = LoadFileData(filePath.c_str(), &size);
 	memcpy(&simulation, bytes, size);
 	
 	/*
