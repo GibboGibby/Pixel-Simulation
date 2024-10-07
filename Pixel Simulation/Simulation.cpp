@@ -201,22 +201,22 @@ void Simulation::PixelStep(int x, int y)
 		int dir = (rightFirst) ? 1 : -1;
 
 		//Check First Dir
-		int firstY = y + dir;
-		int secondY = y - dir;
-		if (firstY < SCREEN_WIDTH && firstY > 0) 
+		int firstX = x + dir;
+		int secondX = x - dir;
+		if (firstX < SCREEN_WIDTH && firstX > 0)
 		{
-			if (simulation[x][firstY].type == AIR)
+			if (simulation[firstX][y].type == AIR)
 			{
-				Pixel* other = &simulation[x][firstY];
+				Pixel* other = &simulation[firstX][y];
 				SwapPixels(pixel, other);
 				pixel = other;
 			}
 		}
-		if (secondY < SCREEN_WIDTH && secondY > 0)
+		if (secondX < SCREEN_WIDTH && secondX > 0)
 		{
-			if (simulation[x][secondY].type == AIR)
+			if (simulation[secondX][y].type == AIR)
 			{
-				Pixel* other = &simulation[x][secondY];
+				Pixel* other = &simulation[secondX][y];
 				SwapPixels(pixel, other);
 				pixel = other;
 			}
