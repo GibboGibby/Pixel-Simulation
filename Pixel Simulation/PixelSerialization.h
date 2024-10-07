@@ -4,6 +4,6 @@
 
 struct PixelSerialized
 {
-	PixelType type;
-	char variant;
+	PixelType type = AIR;
+	unsigned char variant = 0;
 };

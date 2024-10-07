@@ -38,12 +38,18 @@ struct alignas(64) Pixel
 		variant = (unsigned char)(rand() % 256);
 		if (type == WOOD) isResting = true;
 	}
+	// FOR SERIALIZATION
+	Pixel(PixelType _type, unsigned char _variant)
+	{
+		type = _type;
+		variant = _variant;
+	}
 	PixelType type;
 	unsigned char variant;
 	bool hasUpdated = false;
 	Vector2 vel = {0.0f,0.0f};
 	bool isResting = false;
-	bool hasCollided;
+	bool hasCollided = false;
 	int lifeRemaining;
 
 

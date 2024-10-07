@@ -4,8 +4,10 @@
 #include <array>
 #include "Maths.h"
 #include "Helpers.h"
+#include "PixelSerialization.h"
+#include <vector>
 
-#define LOOP_FROM_BOTTOM
+//#define LOOP_FROM_BOTTOM
 
 const int SCREEN_WIDTH = 192 * 3;
 const int SCREEN_HEIGHT = 108 * 3;
@@ -35,13 +37,15 @@ public:
 	void TogglePause() { paused = !paused; }
 
 	void SwapPixels(Pixel* a, Pixel* b);
-
+	
 	Pixel* GetNextDownPixel(int x, int y, int dist);
+	bool IsPixelIsOnGround(int x, int y);
 
 	bool CheckLeftDiagonal(int x, int y);
 	bool CheckRightDiagonal(int x, int y);
 
-
+	void SaveSimulation();
+	void LoadSimulation();
 
 private:
 

@@ -29,10 +29,20 @@ void Simulation::Update()
 
 	Vector2 mousePos = GetMousePosition();
 
-	if (IsKeyPressed(KEY_ONE)) { selectedPixel.type = AIR; } 
-	if (IsKeyPressed(KEY_TWO)) { selectedPixel.type = WOOD; std::cout << "Wood Selected" << std::endl; }
+	if (IsKeyPressed(KEY_ONE))	 selectedPixel.type = AIR; 
+	if (IsKeyPressed(KEY_TWO))	 selectedPixel.type = WOOD;
 	if (IsKeyPressed(KEY_THREE)) selectedPixel.type = SAND;
+	if (IsKeyPressed(KEY_FOUR))  selectedPixel.type = WATER;
 
+
+	if (IsKeyPressed(KEY_F6))
+	{
+		SaveSimulation();
+	}
+	if (IsKeyPressed(KEY_F7))
+	{
+		LoadSimulation();
+	}
 
 	Vector2 mosueWheel = GetMouseWheelMoveV();
 	if (mosueWheel.y > 0)
@@ -171,6 +181,8 @@ void Simulation::PixelStep(int x, int y)
 {
 	Pixel* pixel = &simulation[x][y];
 	PixelData data = PixelDataTable.at(pixel->type);
+	bool onGround = false;
+	bool hasMoved = false;
 	if (pixel->hasUpdated) return;
 	if ((y + 1) >= SCREEN_HEIGHT) return;
 
@@ -190,19 +202,22 @@ void Simulation::PixelStep(int x, int y)
 			//std::cout << "y vel - " << pixel->vel.y << " | abs y - " << absVal << " | and actual vel - " << actualVel << std::endl;
 			//std::cout << "Pixel is falling with vel of " << absVal << std::endl;
 			Pixel* nextPixel = GetNextDownPixel(x, y, actualVel);
+			if (nextPixel == pixel) hasMoved = true;
 			SwapPixels(pixel, nextPixel);
 			pixel = nextPixel;
 		}
 	}
 
-	if (CheckFlag(pixel, MOVE_X) && pixel->hasCollided)
+	onGround = IsPixelIsOnGround(x, y);
+
+	if (CheckFlag(pixel, MOVE_X) && pixel->hasCollided && onGround)
 	{
 		bool rightFirst = RandomBool();
 		int dir = (rightFirst) ? 1 : -1;
 
 		//Check First Dir
 		int firstX = x + dir;
-		int secondX = x - dir;
+		int secondX = x + dir * -1;
 		if (firstX < SCREEN_WIDTH && firstX > 0)
 		{
 			if (simulation[firstX][y].type == AIR)
@@ -210,6 +225,7 @@ void Simulation::PixelStep(int x, int y)
 				Pixel* other = &simulation[firstX][y];
 				SwapPixels(pixel, other);
 				pixel = other;
+				hasMoved = true;
 			}
 		}
 		if (secondX < SCREEN_WIDTH && secondX > 0)
@@ -219,11 +235,12 @@ void Simulation::PixelStep(int x, int y)
 				Pixel* other = &simulation[secondX][y];
 				SwapPixels(pixel, other);
 				pixel = other;
+				hasMoved = true;
 			}
 		}
 	}
 	// TODO: Need to add x-to-y splat so that it is less uniform
-	if (CheckFlag(pixel, MOVE_DIAG) && pixel->hasCollided)
+	if (CheckFlag(pixel, MOVE_DIAG) && pixel->hasCollided && onGround)
 	{
 		int rightX = x +1;
 		int leftX = x-1;
@@ -236,6 +253,7 @@ void Simulation::PixelStep(int x, int y)
 				Pixel* other = &simulation[leftX][newY];
 				SwapPixels(pixel, other);
 				pixel = other;
+				hasMoved = true;
 			}
 			
 			if (CheckRightDiagonal(x, y))
@@ -243,11 +261,20 @@ void Simulation::PixelStep(int x, int y)
 				Pixel* other = &simulation[rightX][newY];
 				SwapPixels(pixel, other);
 				pixel = other;
+				hasMoved = true;
 			}
 		}
 	}
 
 	if (pixel->hasCollided) pixel->vel.y = 0.0f;
+	
+	if (hasMoved) {
+		pixel->isResting = false;
+	}
+	else
+	{
+		pixel->isResting = true;
+	}
 	
 	/*
 	if (pixel->type == SAND)
@@ -269,6 +296,8 @@ void Simulation::SwapPixels(Pixel* a, Pixel* b)
 	Pixel temp = *a;
 	*a = *b;
 	*b = temp;
+	a->hasUpdated = true;
+	b->hasUpdated = true;
 }
 
 Pixel* Simulation::GetNextDownPixel(int x, int y, int dist)
@@ -289,11 +318,22 @@ Pixel* Simulation::GetNextDownPixel(int x, int y, int dist)
 		}
 		else
 		{
-			simulation[x][y].hasCollided = true;
+			//if (lastGoodPixel->type != simulation[x][y].type)
+				simulation[x][y].hasCollided = true;
 			break;
 		}
 	}
 	return lastGoodPixel;
+}
+
+bool Simulation::IsPixelIsOnGround(int x, int y)
+{
+	if (y + 1 > SCREEN_HEIGHT - 1) return false;
+	Pixel* curPixel = &simulation[x][y];
+	Pixel* pixel = &simulation[x][y+1];
+	if (curPixel->hasCollided) return true;
+	if (curPixel->isResting) return true;
+	return false;
 }
 
 bool Simulation::CheckLeftDiagonal(int x, int y)
@@ -318,4 +358,51 @@ bool Simulation::CheckRightDiagonal(int x, int y)
 	if (simulation[newX][y].type != AIR) return false;
 	if (simulation[newX][newY].type == AIR) return true;
 	return false;
+}
+
+void Simulation::SaveSimulation()
+{
+	std::vector<std::vector<PixelSerialized>> serialized(SCREEN_WIDTH, std::vector<PixelSerialized>(SCREEN_HEIGHT));
+	
+	//std::unique_ptr<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>> serialized = std::make_unique<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>>();
+	for (int x = 0; x < simulation.size(); x++)
+	{
+		for (int y = 0; y < simulation[0].size(); y++)
+		{
+			serialized[x][y] = { simulation[x][y].type, simulation[x][y].variant };
+			//serialized[x][y].type = simulation[x][y].type;
+			//serialized[x][y].variant = simulation[x][y].variant;
+		}
+	}
+
+	std::vector<PixelSerialized> flatArray(SCREEN_HEIGHT * SCREEN_WIDTH);
+	for (const auto& row : serialized)
+	{
+		flatArray.insert(flatArray.end(), row.begin(), row.end());
+	}
+
+	SaveFileData("save_data.gib", simulation.data(), sizeof(simulation));
+}
+
+void Simulation::LoadSimulation()
+{
+	//std::unique_ptr<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>> serialized = std::make_unique<std::array<std::array<PixelSerialized, SCREEN_HEIGHT>, SCREEN_WIDTH>>();
+	
+	//std::vector<std::vector<PixelSerialized>> serialized(SCREEN_WIDTH, std::vector<PixelSerialized>(SCREEN_HEIGHT));
+	int size = sizeof(simulation);
+	unsigned char* bytes = LoadFileData("save_data.gib", &size);
+	memcpy(&simulation, bytes, size);
+	
+	/*
+	for (int x = 0; x < simulation.size(); x++)
+	{
+		for (int y = 0; y < simulation[0].size(); y++)
+		{
+			//simulation[x][y].type = serialized[x][y].type;
+			//simulation[x][y].variant = serialized[x][y].variant;
+			simulation[x][y] = { serialized[x][y].type, serialized[x][y].variant };
+		}
+	}
+	*/
+	
 }
