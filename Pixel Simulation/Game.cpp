@@ -32,11 +32,6 @@ void Game::Init()
 
 void Game::Update()
 {
-	if (IsKeyPressed(KEY_A))
-	{
-		std::cout << "A Pressed" << std::endl;
-	}
-
 	if (IsKeyPressed(KEY_F6))
 	{
 		SaveGame("save_data.gib");
