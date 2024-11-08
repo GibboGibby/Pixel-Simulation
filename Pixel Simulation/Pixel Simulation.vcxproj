@@ -136,7 +136,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="ClientGame.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HostGame.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlacingCrosshair.cpp" />
     <ClCompile Include="Settings.cpp" />
@@ -145,8 +147,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="ClientGame.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="HostGame.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="Pixel.h" />
     <ClInclude Include="PixelSerialization.h" />

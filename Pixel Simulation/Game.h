@@ -21,7 +21,7 @@ public:
 	void SaveGame(std::string filePath);
 	void LoadGame(std::string filePath);
 
-private:
+protected:
 	bool gamePaused = false;
 	bool saveScreen = false;
 	Simulation* simulation;
