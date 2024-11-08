@@ -156,6 +156,11 @@ void Application::RenderSettings()
 	{
 		std::cout << "Clicked" << std::endl;
 	}
+
+	if (GuiCheckBox(GetRelativeRectBased({ 835, 610 }, { 50, 50 }), "Loop From Bottom", &g_GameSettings.loopFromBottom))
+	{
+		std::cout << "Clicked" << std::endl;
+	}
 }
 
 void Application::UpdateSwitch()

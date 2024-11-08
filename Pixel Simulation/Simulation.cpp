@@ -1,4 +1,5 @@
 #include "Simulation.h"
+#include "Settings.h"
 #include <iostream>
 Simulation::Simulation()
 {
@@ -153,20 +154,28 @@ void Simulation::SimulationStep()
 	if (paused) return;
 	int xSize = simulation.size();
 	int ySize = simulation[0].size();
-	for (int x = 0; x < xSize; x++)
+	if (g_GameSettings.loopFromBottom)
 	{
-#ifdef LOOP_FROM_BOTTOM
-		for (int y= ySize - 1; y > 0; y--)
-		//for (int y = 0; y < ySize; y++)
+		for (int x = 0; x < xSize; x++)
 		{
-			PixelStep(x, y);
+			for (int y = ySize - 1; y > 0; y--)
+				//for (int y = 0; y < ySize; y++)
+			{
+				PixelStep(x, y);
+			}
 		}
-#else
-		for (int y = 0; y < ySize; y++)
+	}
+	else
+	{
+
+		for (int x = 0; x < xSize; x++)
 		{
-			PixelStep(x, y);
+
+			for (int y = 0; y < ySize; y++)
+			{
+				PixelStep(x, y);
+			}
 		}
-#endif
 	}
 }
 

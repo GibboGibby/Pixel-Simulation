@@ -7,6 +7,7 @@ struct GameSettings
 {
 	bool drawFPS = false;
 	bool pauseGameInMenu = false;
+	bool loopFromBottom = false;
 };
 
 extern GameSettings g_GameSettings;
