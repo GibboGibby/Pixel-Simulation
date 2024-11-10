@@ -42,6 +42,9 @@
     <ClCompile Include="ClientGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="windowsstuff.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClientGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsstuff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

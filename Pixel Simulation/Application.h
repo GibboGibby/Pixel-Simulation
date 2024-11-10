@@ -6,6 +6,8 @@
 #include "style_candy.h"
 #include "style_bluish.h"
 #include "Game.h"
+#include "HostGame.h"
+#include "ClientGame.h"
 #include "Helpers.h"
 
 
@@ -37,7 +39,7 @@ private:
 	Window window;
 	bool appStarted = true;
 	GameState gameState = MAIN_MENU;
-	Game game;
+	Game* game;
 	GameState previousState = MAIN_MENU;
 
 	Font mainMenuButtonFont;

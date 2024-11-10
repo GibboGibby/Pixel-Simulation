@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "Settings.h"
 
-#define INSTANT_GAME
+//#define INSTANT_GAME
 
 void Application::Init()
 {
@@ -17,7 +17,8 @@ void Application::Init()
 #ifdef INSTANT_GAME
 	gameState = GAME;
 	previousState = GAME;
-	game.Init();
+	game = new Game();
+	game->Init();
 	std::cout << "Instant Game is enabled" << std::endl;
 #endif
 	
@@ -66,7 +67,7 @@ void Application::UpdatePauseMenu()
 {
 	if (IsKeyPressed(KEY_ESCAPE))
 	{
-		if (g_GameSettings.pauseGameInMenu) game.Pause(false);
+		if (g_GameSettings.pauseGameInMenu) game->Pause(false);
 		gameState = GAME;
 	}
 }
@@ -97,8 +98,25 @@ void Application::RenderMainMenu()
 	{
 		gameState = GAME;
 		previousState = GAME;
-		game.Init();
+		game = new Game();
+		game->Init();
 	}
+	if (GuiButton({ GetCenteredX(250) - 300,490, 250, 100 }, "Host Game"))
+	{
+		gameState = GAME;
+		previousState = GAME;
+		game = new HostGame();
+		static_cast<HostGame*>(game)->Init();
+	}
+
+	if (GuiButton({ GetCenteredX(250) + 300,490, 250, 100 }, "Join Game"))
+	{
+		gameState = GAME;
+		previousState = GAME;
+		game = new ClientGame();
+		static_cast<ClientGame*>(game)->Init();
+	}
+
 
 	if (GuiButton(GetRelativeRectBased({ 835, 615 }, { 250, 100 }), "Settings"))
 	{
@@ -113,7 +131,18 @@ void Application::RenderMainMenu()
 
 void Application::RenderGame()
 {
-	game.Render();
+	if (game->gameType == CLIENT)
+	{
+		static_cast<ClientGame*>(game)->Render();
+	}
+	else if (game->gameType == HOST)
+	{
+		static_cast<HostGame*>(game)->Render();
+	}
+	else
+	{
+		game->Render();
+	}
 }
 
 void Application::RenderPauseMenu()
@@ -133,9 +162,21 @@ void Application::RenderPauseMenu()
 	if (GuiButton(GetRelativeRectBased({ 835, 740 }, { 250, 100 }), "Quit To Main Menu"))
 	{
 		gameState = MAIN_MENU;
-		game.Cleanup();
-		//delete game;
-		//game = nullptr;
+		if (game->gameType == CLIENT)
+		{
+			static_cast<ClientGame*>(game)->Cleanup();
+		}
+		else if (game->gameType == HOST)
+		{
+			static_cast<HostGame*>(game)->Cleanup();
+		}
+		else
+		{
+			game->Cleanup();
+		}
+		//game->Cleanup();
+		delete game;
+		game = nullptr;
 	}
 }
 
@@ -173,10 +214,22 @@ void Application::UpdateSwitch()
 		break;
 	case GAME:
 		//if (game == nullptr) game = new Game();
-		game.Update();
+		if (game->gameType == CLIENT)
+		{
+			static_cast<ClientGame*>(game)->Update();
+		}
+		else if (game->gameType == HOST)
+		{
+			static_cast<HostGame*>(game)->Update();
+		}
+		else
+		{
+			game->Update();
+		}
+		//game->Update();
 		if (IsKeyPressed(KEY_ESCAPE)) { 
 
-			if (g_GameSettings.pauseGameInMenu) game.Pause(true);
+			if (g_GameSettings.pauseGameInMenu) game->Pause(true);
 			gameState = PAUSE_MENU;
 		}
 		break;
@@ -199,7 +252,7 @@ void Application::RenderSwitch()
 		RenderMainMenu();
 		break;
 	case GAME:
-		game.Render();
+		RenderGame();
 		break;
 	case PAUSE_MENU:
 		RenderPauseMenu();

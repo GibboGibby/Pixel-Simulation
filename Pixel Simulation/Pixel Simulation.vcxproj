@@ -144,6 +144,7 @@
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="windowsstuff.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="style_candy.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="windowsstuff.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

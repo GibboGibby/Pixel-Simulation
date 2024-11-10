@@ -1,7 +1,7 @@
 #pragma once
 #define Clamp(a, x, b) (((a)>(x))?(a):((b)<(x))?(b):(x))
 
-#include "raylib.h"
+#include <raylib.h>
 #include <cstdlib>
 #include <map>
 #include <iostream>

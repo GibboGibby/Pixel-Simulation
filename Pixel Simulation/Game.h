@@ -1,7 +1,16 @@
 #pragma once
 #include <raylib.h>
+
 #include "Simulation.h"
+
 #include <filesystem>
+
+enum GameType
+{
+	SOLO,
+	HOST,
+	CLIENT
+};
 
 class Game
 {
@@ -15,14 +24,15 @@ public:
 	void Update();
 	void Render();
 
-
 	void Pause(bool shouldPuase);
 
 	void SaveGame(std::string filePath);
 	void LoadGame(std::string filePath);
 
+	GameType gameType = SOLO;
 protected:
 	bool gamePaused = false;
 	bool saveScreen = false;
 	Simulation* simulation;
+
 };
