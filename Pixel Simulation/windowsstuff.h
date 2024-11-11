@@ -28,5 +28,7 @@ namespace GibWindows
 
 	void SendData(int socket, char* data, uint32_t sizeOfData);
 
+	void JoinServerClients(int socket);
+
 	void ClientAcceptThread(int serverSocket, std::vector<Client>& clients, std::mutex& mutex, bool& threadRunning);
 }

@@ -15,7 +15,7 @@ namespace GibWindows
 	}
 
 
-	void Init(int& serverSocket)
+	void InitServer(int& serverSocket)
 	{
 		WSAData wsaData;
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
@@ -84,7 +84,27 @@ namespace GibWindows
 
 	void SendData(int socket, char* data, uint32_t sizeOfData)
 	{
-		
+		int slen = sizeof(sockaddr_in);
+		sockaddr_in server;
+
+		memset((char*)&server, 0, sizeof(server));
+		std::string ip = "127.0.0.1";
+
+		// Set server info that has been specified in the arguments supplied to the program
+		server.sin_family = AF_INET;
+		server.sin_port = htons(12345);
+		//_server.sin_addr.s_addr = inet_addr(ip.c_str());
+		inet_pton(AF_INET, (ip.c_str()), &server.sin_addr.s_addr);
+
+		sendto(socket, data, sizeOfData, 0, (struct sockaddr*)&server, slen);
+	}
+
+	void JoinServerClients(int socket)
+	{
+		char* data = new char;
+		*data = true;
+
+		SendData(socket, data, sizeof(char));
 	}
 
 	void ClientAcceptThread(int serverSocket, std::vector<Client>& clients, std::mutex& mutex, bool& threadRunning)

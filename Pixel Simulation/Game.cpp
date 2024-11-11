@@ -50,14 +50,14 @@ void Game::Update()
 
 	Timer timer;
 	simulation->Update();
-	std::cout << "Time taken for update: " << timer.ElapsedMillis() << "ms" << std::endl;
+	//std::cout << "Time taken for update: " << timer.ElapsedMillis() << "ms" << std::endl;
 }
 
 void Game::Render()
 {
 	Timer timer;
 	simulation->Render();
-	std::cout << "Time taken for render: " << timer.ElapsedMillis() << "ms" << std::endl;
+	//std::cout << "Time taken for render: " << timer.ElapsedMillis() << "ms" << std::endl;
 
 }
 

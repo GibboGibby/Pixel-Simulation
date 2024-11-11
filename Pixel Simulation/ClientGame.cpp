@@ -20,6 +20,7 @@ void ClientGame::Init()
 {
 	Game::Init();
 	GibWindows::InitClient(clientSocket);
+	GibWindows::JoinServerClients(clientSocket);
 	timer.Reset();
 }
 
