@@ -22,4 +22,5 @@ private:
 	std::mutex serverMutex;
 	std::thread clientAcceptingThread;
 	bool threadRunning = false;
+	Timer timer;
 };

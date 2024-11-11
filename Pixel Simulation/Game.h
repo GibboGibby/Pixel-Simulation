@@ -1,7 +1,9 @@
 #pragma once
 #include <raylib.h>
-
+#include "Timer.h"
 #include "Simulation.h"
+
+#define NETWORK_WAIT_TIME 1.0f / 60.0f
 
 #include <filesystem>
 

@@ -9,8 +9,8 @@
 
 #define LOOP_FROM_BOTTOM
 
-const int SCREEN_WIDTH = 192 * 3;
-const int SCREEN_HEIGHT = 108 * 3;
+const int SCREEN_WIDTH = 192 * 2;
+const int SCREEN_HEIGHT = 108 * 2;
 
 class Simulation
 {
@@ -26,6 +26,9 @@ public:
 	void SetPixelRange(int x, int y, int width, int height, PixelType type);
 	void Render();
 	void RenderSimulation();
+
+	char* GetPixelAsCharArray();
+	void SetPixelFromCharArray(char* data);
 
 	Vec2 ScreenToSimulationPosition(Vec2 pos);
 

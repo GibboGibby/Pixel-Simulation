@@ -8,6 +8,7 @@ ClientGame::ClientGame()
 {
 	Game::Game();
 	gameType = CLIENT;
+	timer.Reset();
 }
 
 ClientGame::~ClientGame()
@@ -18,6 +19,8 @@ ClientGame::~ClientGame()
 void ClientGame::Init()
 {
 	Game::Init();
+	GibWindows::InitClient(clientSocket);
+	timer.Reset();
 }
 
 void ClientGame::Cleanup()
@@ -27,7 +30,13 @@ void ClientGame::Cleanup()
 
 void ClientGame::Update()
 {
+	if (timer.Elapsed() >= NETWORK_WAIT_TIME)
+	{
+		//Receive Data
 
+		// Reset Timer
+		timer.Reset();
+	}
 	//Game::Update();
 }
 

@@ -149,6 +149,46 @@ void Simulation::RenderSimulation()
 	DrawTexturePro(screenTexture, sourceRec, destRec, origin, rotation, WHITE);
 }
 
+char* Simulation::GetPixelAsCharArray()
+{
+	std::vector<std::vector<char>> arrayOfTypes(SCREEN_WIDTH, std::vector<char>(SCREEN_HEIGHT));
+	
+	for (int x = 0; x < simulation.size(); x++)
+	{
+		for (int y = 0; y < simulation[0].size(); y++)
+		{
+			arrayOfTypes[x][y] = static_cast<char>(simulation[x][y].type);
+			//serialized[x][y].type = simulation[x][y].type;
+			//serialized[x][y].variant = simulation[x][y].variant;
+		}
+	}
+
+	std::vector<char> flatArray(SCREEN_HEIGHT * SCREEN_WIDTH);
+	for (const auto& row : arrayOfTypes)
+	{
+		flatArray.insert(flatArray.end(), row.begin(), row.end());
+	}
+
+	char* returnVal = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
+	memcpy(returnVal, flatArray.data(), flatArray.size() * sizeof(char));
+	return returnVal;
+}
+
+void Simulation::SetPixelFromCharArray(char* data)
+{
+	for (int x = 0; x < simulation.size(); x++)
+	{
+		for (int y = 0; y < simulation[0].size(); y++)
+		{
+			simulation[x][y] = static_cast<PixelType>(*data);
+			data++;
+			//arrayOfTypes[x][y] = static_cast<char>(simulation[x][y].type);
+			//serialized[x][y].type = simulation[x][y].type;
+			//serialized[x][y].variant = simulation[x][y].variant;
+		}
+	}
+}
+
 void Simulation::SimulationStep()
 {
 	if (paused) return;
