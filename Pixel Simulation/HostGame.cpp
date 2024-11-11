@@ -42,7 +42,7 @@ void HostGame::Update()
 	// Server Stuff 1/50ms
 	if (timer.Elapsed() >= NETWORK_WAIT_TIME)
 	{
-		std::cout << "Sending Data to Client" << std::endl;
+		//std::cout << "Sending Data to Client" << std::endl;
 		// Get data as char*
 		char* data = simulation->GetPixelAsCharArray();
 

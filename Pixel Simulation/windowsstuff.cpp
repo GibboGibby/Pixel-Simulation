@@ -75,11 +75,15 @@ namespace GibWindows
 		sendto(serverSocket, data, sizeOfData, 0, (sockaddr*)client.client, slen);
 	}
 
-	void ReceiveData(int socket, char* data, uint32_t sizeOfData)
+	bool ReceiveData(int socket, char* data, uint32_t sizeOfData)
 	{
 		sockaddr_in sender;
 		int slen = sizeof(sockaddr_in);
-		recvfrom(socket, data, sizeOfData, 0, (struct sockaddr*)&sender, &slen);
+		if (recvfrom(socket, data, sizeOfData, 0, (struct sockaddr*)&sender, &slen))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	void SendData(int socket, char* data, uint32_t sizeOfData)
@@ -114,17 +118,27 @@ namespace GibWindows
 		{
 			sockaddr_in newClient;
 			char sentByte;
-			recvfrom(serverSocket, &sentByte, sizeof(bool), 0, (sockaddr*)&newClient, &slen);
-			Client client;
-			HiddenClient* hidClient = new HiddenClient;
-			client.client = hidClient;
-			client.clientAddr = newClient.sin_addr.S_un.S_addr;
-			client.clientPort = newClient.sin_port;
-			client.clientSocket = 0;
-			mutex.lock();
-			clients.push_back(client);
-			mutex.unlock();
+			if (recvfrom(serverSocket, &sentByte, sizeof(bool), 0, (sockaddr*)&newClient, &slen))
+			{
+				std::cout << "Client accepted" << std::endl;
+				Client client;
+				HiddenClient* hidClient = new HiddenClient;
+				client.client = hidClient;
+				client.clientAddr = newClient.sin_addr.S_un.S_addr;
+				client.clientPort = newClient.sin_port;
+				client.clientSocket = 0;
+				mutex.lock();
+				clients.push_back(client);
+				mutex.unlock();
+			}
+			
 		}
+	}
+
+	void SetSocketToNonBlocking(int socket)
+	{
+		unsigned long int noBlock = 1;
+		ioctlsocket(socket, FIONBIO, &noBlock);
 	}
 
 

@@ -20,6 +20,7 @@ void ClientGame::Init()
 {
 	Game::Init();
 	GibWindows::InitClient(clientSocket);
+	GibWindows::SetSocketToNonBlocking(clientSocket);
 	GibWindows::JoinServerClients(clientSocket);
 	timer.Reset();
 }
@@ -34,10 +35,17 @@ void ClientGame::Update()
 {
 	if (timer.Elapsed() >= NETWORK_WAIT_TIME)
 	{
-		//Receive Data
+		// Receive Data
 		char* data = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
-		GibWindows::ReceiveData(clientSocket, data, simulation->GetSizeInBytes());
-		simulation->SetPixelFromCharArray(data);
+		memset(data, 0, SCREEN_HEIGHT * SCREEN_WIDTH);
+		if (GibWindows::ReceiveData(clientSocket, data, simulation->GetSizeInBytes()))
+		{
+			std::cout << "Data has been recieved" << std::endl;
+			simulation->SetPixelFromCharArray(data);
+		}
+		// Cleanup Data
+		delete[] data;
+
 		// Reset Timer
 		timer.Reset();
 	}

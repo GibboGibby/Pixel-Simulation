@@ -170,7 +170,8 @@ char* Simulation::GetPixelAsCharArray()
 	}
 
 	char* returnVal = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
-	memcpy(returnVal, flatArray.data(), flatArray.size() * sizeof(char));
+	//std::cout << "Size of array - " << sizeof(flatArray) << std::endl;
+	memcpy(returnVal, flatArray.data(), SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(char));
 	return returnVal;
 }
 
