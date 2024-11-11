@@ -3,7 +3,7 @@
 #include "Timer.h"
 #include "Simulation.h"
 
-#define NETWORK_WAIT_TIME 1.0f / 60.0f
+#define NETWORK_WAIT_TIME 1.0f / 120.0f
 
 #include <filesystem>
 

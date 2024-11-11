@@ -16,6 +16,8 @@ public:
 	void Update();
 	void Render();
 
+	void SetPort(std::string port) { serverPort = port; }
+
 private:
 	std::vector<GibWindows::Client> clients;
 	int serverSocket;
@@ -23,4 +25,6 @@ private:
 	std::thread clientAcceptingThread;
 	bool threadRunning = false;
 	Timer timer;
+
+	std::string serverPort;
 };

@@ -20,7 +20,7 @@ HostGame::~HostGame()
 void HostGame::Init()
 {
 	Game::Init();
-	GibWindows::InitServer(serverSocket);
+	GibWindows::InitServer(serverSocket, serverPort);
 	threadRunning = true;
 	clientAcceptingThread = std::thread(&GibWindows::ClientAcceptThread, serverSocket, std::ref(clients), std::ref(serverMutex), std::ref(threadRunning));
 	clientAcceptingThread.detach();

@@ -9,6 +9,8 @@
 #include "HostGame.h"
 #include "ClientGame.h"
 #include "Helpers.h"
+#include <string>
+
 
 
 enum GameState {
@@ -42,5 +44,15 @@ private:
 	Game* game;
 	GameState previousState = MAIN_MENU;
 
+	char* hostIp;
+	char* hostPort;
+
+	char* clientIp;
+	char* clientPort;
+
 	Font mainMenuButtonFont;
+
+	bool editHostPort = false;
+	bool editClientIp = false;
+	bool editClientPort = false;
 };

@@ -13,7 +13,12 @@ public:
 	void Update();
 	void Render();
 
+	void SetIPAndPort(std::string ip, std::string port) { serverIp = ip; serverPort = port; }
+
 private:
 	int clientSocket;
 	Timer timer;
+
+	std::string serverIp;
+	std::string serverPort;
 };

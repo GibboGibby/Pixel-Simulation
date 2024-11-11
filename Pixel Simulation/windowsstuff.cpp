@@ -3,6 +3,7 @@
 #include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 #include "windowsstuff.h"
+#include <string>
 namespace GibWindows
 {
 	struct HiddenClient
@@ -15,7 +16,7 @@ namespace GibWindows
 	}
 
 
-	void InitServer(int& serverSocket)
+	void InitServer(int& serverSocket, std::string port)
 	{
 		WSAData wsaData;
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
@@ -32,9 +33,11 @@ namespace GibWindows
 			return;
 		}
 
+		int new_port = std::stoi(port);
+
 		struct sockaddr_in serverAddress;
 		serverAddress.sin_family = AF_INET;
-		serverAddress.sin_port = htons(8888);
+		serverAddress.sin_port = htons(new_port);
 		serverAddress.sin_addr.s_addr = INADDR_ANY;
 
 		if (bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
@@ -100,29 +103,30 @@ namespace GibWindows
 		return false;
 	}
 
-	void SendData(int socket, char* data, uint32_t sizeOfData)
+	void SendData(int socket, char* data, uint32_t sizeOfData, std::string ip, std::string port)
 	{
 		int slen = sizeof(sockaddr_in);
 		sockaddr_in server;
 
 		memset((char*)&server, 0, sizeof(server));
-		std::string ip = "127.0.0.1";
+		
 
+		int new_port = std::stoi(port);
 		// Set server info that has been specified in the arguments supplied to the program
 		server.sin_family = AF_INET;
-		server.sin_port = htons(8888);
+		server.sin_port = htons(new_port);
 		//_server.sin_addr.s_addr = inet_addr(ip.c_str());
 		inet_pton(AF_INET, (ip.c_str()), &server.sin_addr.s_addr);
 
 		sendto(socket, data, sizeOfData, 0, (struct sockaddr*)&server, slen);
 	}
 
-	void JoinServerClients(int socket)
+	void JoinServerClients(int socket, std::string ip, std::string port)
 	{
 		char* data = new char;
 		*data = true;
 
-		SendData(socket, data, sizeof(char));
+		SendData(socket, data, sizeof(char), ip, port);
 		std::cout << "Server join sent" << std::endl;
 	}
 

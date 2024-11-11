@@ -21,7 +21,7 @@ void ClientGame::Init()
 	Game::Init();
 	GibWindows::InitClient(clientSocket);
 	GibWindows::SetSocketToNonBlocking(clientSocket);
-	GibWindows::JoinServerClients(clientSocket);
+	GibWindows::JoinServerClients(clientSocket, serverIp, serverPort);
 	timer.Reset();
 }
 

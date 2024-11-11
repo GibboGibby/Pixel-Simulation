@@ -5,6 +5,13 @@
 
 void Application::Init()
 {
+	hostIp = new char[15] {"127.0.0.1"};
+	hostPort = new char[5] {"8888"};
+	clientIp = new char[15] {"127.0.0.1"};
+	clientPort = new char[5] {"8888"};
+
+	//std::fill_n(hostIp, 15, 0);
+
 	window.Init(1920, 1080, "Pixel Simulation");
 	//GuiLoadStyleCandy();
 	GuiLoadStyleBluish();
@@ -85,11 +92,25 @@ void Application::RenderMainMenu()
 {
 	GuiSetStyle(BUTTON, TEXT_PADDING, 10);
 	GuiSetStyle(DEFAULT, TEXT_SPACING, 2);
+
 	//GuiTextBox({ 300,100, 1320, 200 }, guiText, 300, true);
+
+
+	Vector2 mousePosition = GetMousePosition();
+
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		// Only one box can be active at a time
+		editHostPort = CheckCollisionPointRec(mousePosition, { GetCenteredX(250) - 300,600, 250, 150 });
+		editClientIp = CheckCollisionPointRec(mousePosition, { GetCenteredX(250) + 300,600, 250, 150 });
+		editClientPort = CheckCollisionPointRec(mousePosition, { GetCenteredX(250) + 300,800, 250, 150 });
+	}
+
 	
 	//DrawText("Pixel Simulation", 750, 250, 60, WHITE);
 	DrawText("Pixel Simulation", GetScreenWidth() / 2 - MeasureText("Pixel Simulation", 60) / 2, 250, 60, WHITE);
 	DrawText("By James Gibson", GetScreenWidth() / 2 - MeasureText("By James Gibson", 24) / 2, 350, 24, BLUE);
+
+	int clickedTextBox = 0;
 
 	//GuiSetFont(mainMenuButtonFont);
 	//if (GuiButton({ 835, 490, 250, 100 }, "Start Game"))
@@ -106,16 +127,24 @@ void Application::RenderMainMenu()
 		gameState = GAME;
 		previousState = GAME;
 		game = new HostGame();
+		static_cast<HostGame*>(game)->SetPort(hostPort);
 		static_cast<HostGame*>(game)->Init();
 	}
+	GuiTextBox({ GetCenteredX(250) - 300,600, 250, 150 }, hostPort, 6, editHostPort);
 
 	if (GuiButton({ GetCenteredX(250) + 300,490, 250, 100 }, "Join Game"))
 	{
 		gameState = GAME;
 		previousState = GAME;
 		game = new ClientGame();
+		static_cast<ClientGame*>(game)->SetIPAndPort(clientIp, clientPort);
 		static_cast<ClientGame*>(game)->Init();
 	}
+
+	GuiTextBox({ GetCenteredX(250) + 300,600, 250, 150 }, clientIp, 16, editClientIp);
+
+	GuiTextBox({ GetCenteredX(250) + 300,800, 250, 150 }, clientPort, 6, editClientPort);
+
 
 
 	if (GuiButton(GetRelativeRectBased({ 835, 615 }, { 250, 100 }), "Settings"))
