@@ -34,7 +34,7 @@ namespace GibWindows
 
 		struct sockaddr_in serverAddress;
 		serverAddress.sin_family = AF_INET;
-		serverAddress.sin_port = htons(12345);
+		serverAddress.sin_port = htons(8888);
 		serverAddress.sin_addr.s_addr = INADDR_ANY;
 
 		if (bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
@@ -72,15 +72,29 @@ namespace GibWindows
 	void SendDataToClient(int serverSocket, Client client, char* data, uint32_t sizeOfData)
 	{
 		int slen = sizeof(sockaddr_in);
-		sendto(serverSocket, data, sizeOfData, 0, (sockaddr*)client.client, slen);
+		if (sendto(serverSocket, data, sizeOfData, 0, (sockaddr*)client.client, slen) == SOCKET_ERROR)
+		{
+			std::cout << "sendto error. Error code: " << WSAGetLastError() << std::endl;
+		}
+		else
+		{
+			std::cout << "data sent" << std::endl;
+		}
 	}
 
 	bool ReceiveData(int socket, char* data, uint32_t sizeOfData)
 	{
 		sockaddr_in sender;
 		int slen = sizeof(sockaddr_in);
-		if (recvfrom(socket, data, sizeOfData, 0, (struct sockaddr*)&sender, &slen))
+		if (recvfrom(socket, data, sizeOfData, 0, (struct sockaddr*)&sender, &slen) == SOCKET_ERROR)
 		{
+			std::cout << "Recvfrom error. Error code: " << WSAGetLastError() << std::endl;
+			return false;
+		}
+		else
+		{
+			
+			std::cout << "Data receieved" << std::endl;
 			return true;
 		}
 		return false;
@@ -96,7 +110,7 @@ namespace GibWindows
 
 		// Set server info that has been specified in the arguments supplied to the program
 		server.sin_family = AF_INET;
-		server.sin_port = htons(12345);
+		server.sin_port = htons(8888);
 		//_server.sin_addr.s_addr = inet_addr(ip.c_str());
 		inet_pton(AF_INET, (ip.c_str()), &server.sin_addr.s_addr);
 
@@ -109,6 +123,7 @@ namespace GibWindows
 		*data = true;
 
 		SendData(socket, data, sizeof(char));
+		std::cout << "Server join sent" << std::endl;
 	}
 
 	void ClientAcceptThread(int serverSocket, std::vector<Client>& clients, std::mutex& mutex, bool& threadRunning)
@@ -123,6 +138,7 @@ namespace GibWindows
 				std::cout << "Client accepted" << std::endl;
 				Client client;
 				HiddenClient* hidClient = new HiddenClient;
+				hidClient->client_sockaddr = newClient;
 				client.client = hidClient;
 				client.clientAddr = newClient.sin_addr.S_un.S_addr;
 				client.clientPort = newClient.sin_port;

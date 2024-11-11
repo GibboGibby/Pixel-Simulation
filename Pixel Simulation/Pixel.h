@@ -9,7 +9,7 @@
 
 enum PixelType : char
 {
-	AIR,
+	AIR = 0,
 	WOOD,
 	SAND,
 	WATER,
@@ -18,6 +18,28 @@ enum PixelType : char
 	UNDEFINED,
 	VOID
 };
+
+inline std::string GetNameByPixelType(PixelType type)
+{
+	switch (type)
+	{
+	case AIR:
+		return "Air";
+		break;
+	case WOOD:
+		return "Wood";
+		break;
+	case SAND:
+		return "Sand";
+		break;
+	case WATER:
+		return "Water";
+		break;
+	default:
+		return "Unknown";
+		break;
+	}
+}
 
 enum PixelFlags
 {

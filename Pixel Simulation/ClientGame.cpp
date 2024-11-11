@@ -37,9 +37,19 @@ void ClientGame::Update()
 	{
 		// Receive Data
 		char* data = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
-		memset(data, 0, SCREEN_HEIGHT * SCREEN_WIDTH);
-		if (GibWindows::ReceiveData(clientSocket, data, simulation->GetSizeInBytes()))
+		//memset(data, 0, SCREEN_HEIGHT * SCREEN_WIDTH);
+		if (GibWindows::ReceiveData(clientSocket, data, SCREEN_HEIGHT * SCREEN_WIDTH))
 		{
+			if (IsKeyDown(KEY_M))
+			{
+				std::cout << "First few data" << std::endl;
+				std::string thing;
+				for (int i = 0; i < 100; i++)
+				{
+					thing += GetNameByPixelType((PixelType)data[i]) + " ";
+				}
+				std::cout << thing << std::endl;
+			}
 			std::cout << "Data has been recieved" << std::endl;
 			simulation->SetPixelFromCharArray(data);
 		}

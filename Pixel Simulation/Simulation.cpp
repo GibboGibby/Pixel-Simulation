@@ -152,12 +152,16 @@ void Simulation::RenderSimulation()
 char* Simulation::GetPixelAsCharArray()
 {
 	std::vector<std::vector<char>> arrayOfTypes(SCREEN_WIDTH, std::vector<char>(SCREEN_HEIGHT));
+	char* newReturnVal = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
+	char* startPtr = &newReturnVal[0];
 	
 	for (int x = 0; x < simulation.size(); x++)
 	{
 		for (int y = 0; y < simulation[0].size(); y++)
 		{
-			arrayOfTypes[x][y] = static_cast<char>(simulation[x][y].type);
+			arrayOfTypes[x][y] = (char)simulation[x][y].type;
+			*startPtr = static_cast<char>(simulation[x][y].type);
+			startPtr++;
 			//serialized[x][y].type = simulation[x][y].type;
 			//serialized[x][y].variant = simulation[x][y].variant;
 		}
@@ -171,8 +175,8 @@ char* Simulation::GetPixelAsCharArray()
 
 	char* returnVal = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
 	//std::cout << "Size of array - " << sizeof(flatArray) << std::endl;
-	memcpy(returnVal, flatArray.data(), SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(char));
-	return returnVal;
+	//memcpy(returnVal, arrayOfTypes.data(), SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(char));
+	return newReturnVal;
 }
 
 void Simulation::SetPixelFromCharArray(char* data)
@@ -181,7 +185,9 @@ void Simulation::SetPixelFromCharArray(char* data)
 	{
 		for (int y = 0; y < simulation[0].size(); y++)
 		{
-			simulation[x][y] = static_cast<PixelType>(*data);
+			Pixel* pixel = &simulation[x][y];
+			
+			pixel->type = static_cast<PixelType>(*data);
 			data++;
 			//arrayOfTypes[x][y] = static_cast<char>(simulation[x][y].type);
 			//serialized[x][y].type = simulation[x][y].type;

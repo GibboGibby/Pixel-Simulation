@@ -46,6 +46,17 @@ void HostGame::Update()
 		// Get data as char*
 		char* data = simulation->GetPixelAsCharArray();
 
+		if (IsKeyDown(KEY_M))
+		{
+			std::cout << "First few data" << std::endl;
+			std::string thing;
+			for (int i = 0; i < 100; i++)
+			{
+				thing += GetNameByPixelType((PixelType)data[i]) + " ";
+			}
+			std::cout << thing << std::endl;
+		}
+
 		// Send to all Clients
 		for (int i = 0; i < clients.size(); i++)
 		{
