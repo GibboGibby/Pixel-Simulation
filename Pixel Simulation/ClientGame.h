@@ -12,4 +12,7 @@ public:
 
 	void Update();
 	void Render();
+
+private:
+	int clientSocket;
 };

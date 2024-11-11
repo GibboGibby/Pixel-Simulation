@@ -1,9 +1,14 @@
 #include <iostream>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
 #include "windowsstuff.h"
 namespace GibWindows
 {
+	struct HiddenClient
+	{
+		sockaddr_in client_sockaddr;
+	};
 
 	void Test() {
 		std::cout << "Test Run!" << std::endl;
@@ -19,7 +24,7 @@ namespace GibWindows
 			return;
 		}
 
-		serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+		serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
 		if (serverSocket == -1)
 		{
 			std::cerr << "Error creating socket" << std::endl;
@@ -38,11 +43,22 @@ namespace GibWindows
 			CloseSocketAndCleanup(serverSocket);
 			return;
 		}
+	}
 
-		if (listen(serverSocket, SOMAXCONN) == -1)
+	void InitClient(int& clientSocket)
+	{
+		WSAData wsaData;
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		{
-			std::cerr << "Error listening for connections" << std::endl;
-			CloseSocketAndCleanup(serverSocket);
+			std::cerr << "Winsock initialization failed" << std::endl;
+			return;
+		}
+
+		clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
+		if (clientSocket == -1)
+		{
+			std::cerr << "Error creating socket" << std::endl;
+			CloseSocketAndCleanup(clientSocket);
 			return;
 		}
 	}
@@ -53,29 +69,44 @@ namespace GibWindows
 		WSACleanup();
 	}
 
+	void SendDataToClient(int serverSocket, Client client, char* data, uint32_t sizeOfData)
+	{
+		int slen = sizeof(sockaddr_in);
+		sendto(serverSocket, data, sizeOfData, 0, (sockaddr*)client.client, slen);
+	}
+
+	void ReceiveData(int socket, char* data, uint32_t sizeOfData)
+	{
+		sockaddr_in sender;
+		int slen = sizeof(sockaddr_in);
+		recvfrom(socket, data, sizeOfData, 0, (struct sockaddr*)&sender, &slen);
+	}
+
+	void SendData(int socket, char* data, uint32_t sizeOfData)
+	{
+		
+	}
+
 	void ClientAcceptThread(int serverSocket, std::vector<Client>& clients, std::mutex& mutex, bool& threadRunning)
 	{
+		int slen = sizeof(sockaddr_in);
 		while (threadRunning)
 		{
-			struct sockaddr_in clientAddress;
-			socklen_t clientAddressSize = sizeof(clientAddress);
-			int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressSize);
-			if (clientSocket == -1) {
-			}
-			else
-			{
-				std::cout << "Connection Receieved" << std::endl;
-				mutex.lock();
-				Client client;
-
-				//client.clientAddr = static_cast<int>((&clientAddress)->sin_addr.S_un.S_addr);
-				client.clientAddr = clientAddress.sin_addr.S_un.S_addr;
-				client.clientSocket = clientSocket;
-				clients.push_back(client);
-				mutex.unlock();
-			}
+			sockaddr_in newClient;
+			char sentByte;
+			recvfrom(serverSocket, &sentByte, sizeof(bool), 0, (sockaddr*)&newClient, &slen);
+			Client client;
+			HiddenClient* hidClient = new HiddenClient;
+			client.client = hidClient;
+			client.clientAddr = newClient.sin_addr.S_un.S_addr;
+			client.clientPort = newClient.sin_port;
+			client.clientSocket = 0;
+			mutex.lock();
+			clients.push_back(client);
+			mutex.unlock();
 		}
 	}
+
 
 	bool CheckForNewClient(int serverSocket, Client& client)
 	{
@@ -93,7 +124,7 @@ namespace GibWindows
 		}
 	}
 
-	void 
+	
 
 
 
