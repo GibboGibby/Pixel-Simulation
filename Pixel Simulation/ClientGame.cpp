@@ -26,6 +26,7 @@ void ClientGame::Init()
 void ClientGame::Cleanup()
 {
 	Game::Cleanup();
+	GibWindows::CloseSocketAndCleanup(clientSocket);
 }
 
 void ClientGame::Update()
@@ -33,7 +34,9 @@ void ClientGame::Update()
 	if (timer.Elapsed() >= NETWORK_WAIT_TIME)
 	{
 		//Receive Data
-
+		char* data = new char[SCREEN_HEIGHT * SCREEN_WIDTH];
+		GibWindows::ReceiveData(clientSocket, data, simulation->GetSizeInBytes());
+		simulation->SetPixelFromCharArray(data);
 		// Reset Timer
 		timer.Reset();
 	}

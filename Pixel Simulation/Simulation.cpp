@@ -189,6 +189,11 @@ void Simulation::SetPixelFromCharArray(char* data)
 	}
 }
 
+int Simulation::GetSizeInBytes()
+{
+	return simulation.size() * simulation[0].size() * sizeof(char);
+}
+
 void Simulation::SimulationStep()
 {
 	if (paused) return;

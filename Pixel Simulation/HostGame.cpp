@@ -31,6 +31,7 @@ void HostGame::Cleanup()
 {
 	threadRunning = false;
 	clientAcceptingThread.join();
+	GibWindows::CloseSocketAndCleanup(serverSocket);
 	Game::Cleanup();
 }
 
@@ -42,13 +43,15 @@ void HostGame::Update()
 	if (timer.Elapsed() >= NETWORK_WAIT_TIME)
 	{
 		// Get data as char*
-		
+		char* data = simulation->GetPixelAsCharArray();
 
 		// Send to all Clients
 		for (int i = 0; i < clients.size(); i++)
 		{
-			
+			GibWindows::SendDataToClient(serverSocket, clients[i], data, simulation->GetSizeInBytes());
 		}
+		//Cleanup data
+		delete[] data;
 
 		// Reset Timer
 		timer.Reset();

@@ -30,6 +30,9 @@ public:
 	char* GetPixelAsCharArray();
 	void SetPixelFromCharArray(char* data);
 
+	int GetSizeInBytes();
+	
+
 	Vec2 ScreenToSimulationPosition(Vec2 pos);
 
 	Vec2 SimulationToScreenPosition(Vec2 pos);
